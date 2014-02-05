@@ -12,6 +12,15 @@ require 'open-uri'
 ###########################################################
 
 set :public_folder, File.dirname(__FILE__) + '/public'
+set :sessions => true
+
+# register do
+#   def auth (type)
+#     condition do
+#       redirect "/login" unless send("is_#{type}?")
+#     end
+#   end
+# end
 
 configure :development, :production do
     ActiveRecord::Base.establish_connection(
@@ -34,6 +43,17 @@ ActiveRecord::Base.include_root_in_json = false
 # Models to Access the database through ActiveRecord.
 # Define associations here if need be
 # http://guides.rubyonrails.org/association_basics.html
+
+  # helpers do
+  #   def is_user?
+  #     @user != nil
+  #   end
+  # end
+
+  # before do
+  #   @user = User.get(session[:user_id])
+  # end
+
 
 class Link < ActiveRecord::Base
     has_many :clicks
@@ -58,7 +78,8 @@ get '/' do
 end
 
 get '/links' do
-    links = Link.order("created_at DESC")
+    # links = Link.order("created_at DESC")
+    links = Link.order("visits DESC")
     links.map { |link|
         link.as_json.merge(base_url: request.base_url)
     }.to_json
@@ -78,6 +99,18 @@ get '/:url' do
     raise Sinatra::NotFound if link.nil?
     link.clicks.create!
     redirect link.url
+end
+
+# get "/protected", :auth => :user do
+#   "Hello, #{@user.name}."
+# end
+
+post "/login" do
+  session[:user_id] = User.authenticate(params).id
+end
+
+get "/logout" do
+  session[:user_id] = nil
 end
 
 ###########################################################

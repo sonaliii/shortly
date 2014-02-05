@@ -9,6 +9,7 @@ Shortly.LinksView = Backbone.View.extend({
 
   render: function() {
     this.$el.empty();
+    this.$el.append('<form class="filter"><label for="numberVisits">Number of Visits</label><input type="radio" name="filter" value="numberVisits"><br><label for="createdAt">Recently Created</label><input type="radio" name="filter" value="createdAt"></form>');
     return this;
   },
 

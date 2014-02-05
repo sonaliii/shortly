@@ -42,6 +42,13 @@ window.Shortly = Backbone.View.extend({
     this.updateNav('create');
   },
 
+  renderLoginView: function(e){
+    e && e.preventDefault();
+    var loginCreateView = new Shortly.LoginCreateView();
+    this.$el.find('#container').html( loginCreateView.render().el );
+    this.updateNav('create');
+  },
+
   updateNav: function(className){
     this.$el.find('.navigation li a')
             .removeClass('selected')
