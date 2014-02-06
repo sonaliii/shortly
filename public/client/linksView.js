@@ -8,7 +8,8 @@ Shortly.LinksView = Backbone.View.extend({
   },
 
   events: {
-    'change .filter': 'sort'
+    'change .filter': 'sort',
+    'submit': 'filter'
   },
 
 
@@ -29,7 +30,19 @@ Shortly.LinksView = Backbone.View.extend({
 
   render: function() {
     this.$el.empty();
-    this.$el.append('<h4>Sort Results By:</h4><form class="filter"><label for="numberVisits">Number of Visits</label><input type="radio" name="filter" id="numberOfVisits" value="numberVisits"><br><label for="recentlyVisited">Recently Visited</label><input type="radio" name="filter" value="recentlyVisited"></form>');
+    this.$el.append('\
+      <form> \
+        <input class="search" placeholder="Search Here..."></input> \
+      </form> \
+      <h4>Sort Results By:</h4> \
+        <form class="filter"> \
+          <label for="numberVisits">Number of Visits</label> \
+          <input type="radio" name="filter" id="numberOfVisits" value="numberVisits"><br> \
+          <label for="recentlyVisited"> \
+              Recently Visited \
+          </label> \
+          <input type="radio" name="filter" value="recentlyVisited"> \
+        </form>');
     return this;
   },
 
@@ -42,6 +55,16 @@ Shortly.LinksView = Backbone.View.extend({
   addOne: function(item){
     var view = new Shortly.LinkView( {model: item} );
     this.$el.append(view.render().el);
+  },
+
+  filter: function(e){
+    e.preventDefault();
+    var form = this.$el.find('.search');
+    var text = form.val();
+    this.collection.fetch({
+      url: '/links/filter/' + text
+    });
+    form.val('');
   }
 
 });

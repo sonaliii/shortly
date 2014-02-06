@@ -84,6 +84,14 @@ get '/links' do
     }.to_json
 end
 
+get '/links/filter/:text' do 
+  filterBy = params[:text]
+  links = Link.where(Link.arel_table[:title].matches(filterBy + '%'))
+  links.map { |link|
+        link.as_json.merge(base_url: request.base_url)
+    }.to_json
+end
+
 get '/links/:query' do
     sortBy = params[:query]
     links = Link.order("#{sortBy} DESC")
