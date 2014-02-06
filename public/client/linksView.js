@@ -22,7 +22,7 @@ Shortly.LinksView = Backbone.View.extend({
     } else {
       // $.get('http://localhost:4567/links', {value: "created_at"});
       this.collection.fetch({
-        url: '/links/created_at'
+        url: '/links/updated_at'
       });
     }
   },
