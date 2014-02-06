@@ -12,16 +12,17 @@ Shortly.LinksView = Backbone.View.extend({
   },
 
 
-  sort: function () {
+  sort: function (e) {
+    e.preventDefault();
     if(document.getElementById("numberOfVisits").checked) {
-      $.get('http://localhost:4567/links', {value: "visits"});
-      this.collection.fetch();
-    } else {
-      $.get('http://localhost:4567/links', {value: "created_at"});
+      // $.get('http://localhost:4567/links', {value: "visits"});
       this.collection.fetch({
-        success: function (model, response) {
-          console.log(response);
-        }
+        url: '/links/visits'
+      });
+    } else {
+      // $.get('http://localhost:4567/links', {value: "created_at"});
+      this.collection.fetch({
+        url: '/links/created_at'
       });
     }
   },
@@ -33,6 +34,8 @@ Shortly.LinksView = Backbone.View.extend({
   },
 
   addAll: function(){
+    console.log(this.collection);
+    this.render();
     this.collection.forEach(this.addOne, this);
   },
 
