@@ -79,7 +79,8 @@ end
 
 get '/links' do
     # links = Link.order("created_at DESC")
-    links = Link.order("visits DESC")
+    sortBy = request.query_string.split('=')[1] || "visits"
+    links = Link.order("#{sortBy} DESC")
     links.map { |link|
         link.as_json.merge(base_url: request.base_url)
     }.to_json
