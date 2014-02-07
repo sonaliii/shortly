@@ -69,11 +69,23 @@ class Click < ActiveRecord::Base
     belongs_to :link, counter_cache: :visits, touch: true
 end
 
+class User < ActiveRecord::Base
+  before_save do |record|
+        record.session_id = Digest::SHA1.hexdigest(url)[0,5]
+    end
+end
+
+
 ###########################################################
 # Routes
 ###########################################################
 
+get '/login' do
+    erb :login #CREATE THIS FILE
+end
+
 get '/' do
+  #if not username.loggedin , redirect to /login else:
     erb :index
 end
 
@@ -120,17 +132,13 @@ end
 #   "Hello, #{@user.name}."
 # end
 
-post "/login" do
-  session[:user_id] = User.authenticate(params).id
-end
-
-get "/logout" do
-  session[:user_id] = nil
-end
-
 ###########################################################
 # Utility
 ###########################################################
+
+#def check_if_logged_in
+  #query user db with username
+  #return user.loggedIn
 
 def read_url_head url
     head = ""
